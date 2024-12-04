@@ -19,7 +19,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
+            align-items: center;z
         }
 
         h2 {
@@ -111,23 +111,21 @@
             display: none;
         }
 
-        /* Particles.js container */
         #particles-js {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1; /* Ensure particles stay in the background */
+            z-index: -1; 
         }
     </style>
 </head>
 <body>
-    <!-- Particles.js Background -->
+   
     <div id="particles-js"></div>
 
 
-    <!-- Poem Generator Section -->
     <section id="poem-generator-section">
         <h2>Generate Your Poem</h2>
         <form id="poem-generator">
@@ -138,10 +136,9 @@
         <div id="poem" class="hidden"></div>
     </section>
 
-    <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/typewriter-effect/dist/core.js"></script>
     <script>
-        // Particle.js setup
+        
         particlesJS("particles-js", {
             "particles": {
                 "number": {
@@ -233,7 +230,7 @@
         }
 
         function generatePoem(event) {
-            event.preventDefault(); // Prevent the form from refreshing the page
+            event.preventDefault(); 
             let wordInput = document.querySelector("#word");
 
             let apiKey = "9tb7143e5ff804f5od02a6f195ae433e";
@@ -243,21 +240,21 @@
 
             let apiUrl = `https://api.shecodes.io/ai/v1/generate?prompt=${encodeURIComponent(prompt)}&context=${encodeURIComponent(context)}&key=${apiKey}`;
 
-            // Show the loading animation
+            
             let poemElement = document.querySelector("#poem");
             poemElement.classList.remove("hidden");
             poemElement.innerHTML = `<div class="blink">Your poem about <strong>${wordInput.value}</strong> is in progress...</div>`;
 
             console.log("Generating poem...");
 
-            // Call the API and handle the response
+            
             axios.get(apiUrl).then(displayPoem).catch(error => {
                 console.error("Error generating poem:", error);
                 poemElement.innerHTML = `<div class="blink">Something went wrong! Please try again.</div>`;
             });
         }
 
-        // Attach the event listener to the form
+        
         let poemFormElement = document.querySelector("#poem-generator");
         poemFormElement.addEventListener("submit", generatePoem);
     </script>
