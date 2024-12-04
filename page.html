@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate a Romantic Poem</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/typewriter-effect/2.18.1/typewriter.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js"></script> <!-- Particles.js CDN -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #314E34, #92A8A3); /* Rainy forest shades */
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1.2rem;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            margin-top: 10px;
+            background-color: #5D8269;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #78A890;
+        }
+
+        #poem {
+            margin-top: 20px;
+            font-size: 1.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            line-height: 1.5;
+        }
+
+        .blink {
+            font-style: italic;
+            opacity: 0.8;
+            animation: blink 1s step-start infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Navigation Bar Styles */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(45, 71, 57, 0.8);
+            padding: 15px 0;
+            text-align: center;
+            z-index: 100;
+        }
+
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #f0f8f7;
+            font-size: 1.2rem;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Hide the poem element initially */
+        .hidden {
+            display: none;
+        }
+
+        /* Particles.js container */
+        #particles-js {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Ensure particles stay in the background */
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles.js Background -->
+    <div id="particles-js"></div>
+
+
+    <!-- Poem Generator Section -->
+    <section id="poem-generator-section">
+        <h2>Generate Your Poem</h2>
+        <form id="poem-generator">
+            <label for="word">Enter a Word:</label><br>
+            <input type="text" id="word" placeholder="e.g., Love, Forever, Name" required><br>
+            <button type="submit">Generate Poem</button>
+        </form>
+        <div id="poem" class="hidden"></div>
+    </section>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/typewriter-effect/dist/core.js"></script>
+    <script>
+        // Particle.js setup
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ffffff"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 1,
+                        "opacity_min": 0.1
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 40,
+                        "size_min": 0.1
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ffffff",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "repulse"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+
+        function displayPoem(response) {
+            console.log("Poem generated:", response.data.answer);
+
+            // Display the poem using Typewriter effect
+            const typewriter = new Typewriter("#poem", {
+                autoStart: true,
+                strings: [response.data.answer],
+                delay: 50,
+                cursor: "",
+            });
+        }
+
+        function generatePoem(event) {
+            event.preventDefault(); // Prevent the form from refreshing the page
+            let wordInput = document.querySelector("#word");
+
+            let apiKey = "9tb7143e5ff804f5od02a6f195ae433e";
+            let prompt = `Generate a romantic English poem that rhymes including the word ${wordInput.value}`;
+            let context =
+                "You are a romantic poem expert and love to tell short and funny love poems. Your mission is to generate 4-line poems. Please return the poem as plain text, without any HTML tags or <br/> elements.";
+
+            let apiUrl = `https://api.shecodes.io/ai/v1/generate?prompt=${encodeURIComponent(prompt)}&context=${encodeURIComponent(context)}&key=${apiKey}`;
+
+            // Show the loading animation
+            let poemElement = document.querySelector("#poem");
+            poemElement.classList.remove("hidden");
+            poemElement.innerHTML = `<div class="blink">Your poem about <strong>${wordInput.value}</strong> is in progress...</div>`;
+
+            console.log("Generating poem...");
+
+            // Call the API and handle the response
+            axios.get(apiUrl).then(displayPoem).catch(error => {
+                console.error("Error generating poem:", error);
+                poemElement.innerHTML = `<div class="blink">Something went wrong! Please try again.</div>`;
+            });
+        }
+
+        // Attach the event listener to the form
+        let poemFormElement = document.querySelector("#poem-generator");
+        poemFormElement.addEventListener("submit", generatePoem);
+    </script>
+</body>
+</html>
