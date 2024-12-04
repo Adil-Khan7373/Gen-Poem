@@ -6,11 +6,11 @@
     <title>Generate a Romantic Poem</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/typewriter-effect/2.18.1/typewriter.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/particles.js"></script> <!-- Particles.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(to bottom, #314E34, #92A8A3); /* Rainy forest shades */
+            background: linear-gradient(to bottom, #314E34, #92A8A3);
             color: white;
             text-align: center;
             margin: 0;
@@ -19,7 +19,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;z
+            align-items: center;
         }
 
         h2 {
@@ -80,7 +80,6 @@
             }
         }
 
-        /* Navigation Bar Styles */
         nav {
             position: fixed;
             top: 0;
@@ -106,7 +105,6 @@
             background-color: rgba(255, 255, 255, 0.2);
         }
 
-        /* Hide the poem element initially */
         .hidden {
             display: none;
         }
@@ -117,17 +115,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1; 
+            z-index: -1;
         }
     </style>
 </head>
 <body>
-   
     <div id="particles-js"></div>
-
-
     <section id="poem-generator-section">
-        <h2>Generate Your Poem</h2>
+        <h2>Generate Your Romantic Poem</h2>
         <form id="poem-generator">
             <label for="word">Enter a Word:</label><br>
             <input type="text" id="word" placeholder="e.g., Love, Forever, Name" required><br>
@@ -135,10 +130,8 @@
         </form>
         <div id="poem" class="hidden"></div>
     </section>
-
     <script src="https://cdn.jsdelivr.net/npm/typewriter-effect/dist/core.js"></script>
     <script>
-        
         particlesJS("particles-js", {
             "particles": {
                 "number": {
@@ -218,9 +211,6 @@
         });
 
         function displayPoem(response) {
-            console.log("Poem generated:", response.data.answer);
-
-            // Display the poem using Typewriter effect
             const typewriter = new Typewriter("#poem", {
                 autoStart: true,
                 strings: [response.data.answer],
@@ -230,31 +220,21 @@
         }
 
         function generatePoem(event) {
-            event.preventDefault(); 
+            event.preventDefault();
             let wordInput = document.querySelector("#word");
-
             let apiKey = "9tb7143e5ff804f5od02a6f195ae433e";
             let prompt = `Generate a romantic English poem that rhymes including the word ${wordInput.value}`;
             let context =
                 "You are a romantic poem expert and love to tell short and funny love poems. Your mission is to generate 4-line poems. Please return the poem as plain text, without any HTML tags or <br/> elements.";
-
             let apiUrl = `https://api.shecodes.io/ai/v1/generate?prompt=${encodeURIComponent(prompt)}&context=${encodeURIComponent(context)}&key=${apiKey}`;
-
-            
             let poemElement = document.querySelector("#poem");
             poemElement.classList.remove("hidden");
             poemElement.innerHTML = `<div class="blink">Your poem about <strong>${wordInput.value}</strong> is in progress...</div>`;
-
-            console.log("Generating poem...");
-
-            
             axios.get(apiUrl).then(displayPoem).catch(error => {
-                console.error("Error generating poem:", error);
                 poemElement.innerHTML = `<div class="blink">Something went wrong! Please try again.</div>`;
             });
         }
 
-        
         let poemFormElement = document.querySelector("#poem-generator");
         poemFormElement.addEventListener("submit", generatePoem);
     </script>
